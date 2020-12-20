@@ -370,7 +370,7 @@ git add .
 git commit -m 'added Dockerfiles for microservices'
 git push --set-upstream origin feature/msp-6
 git checkout dev
-git merge feature/msp-6
+git merge feature/msp-6T
 git push origin dev
 ```
 
