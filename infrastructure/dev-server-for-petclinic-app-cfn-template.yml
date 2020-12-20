@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: >
+  This Cloudformation template prepares development environment for Petclinic Microservices Application.
+  User needs to select appropriate key name when launching the template.
+
+Parameters:
+  KeyPairName:
+    Description: Enter the name of your Key Pair for SSH connections.
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: Must one of the existing EC2 KeyPair
+
+Resources:
+  PetclinicDemoSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH, HTTP and other needed ports for Petclinic Microservices
+      SecurityGroupIngress:
+        - IpProtocol: tcp  # HTTP
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp  # SSH
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp  # admin-server
+          FromPort: 9090
+          ToPort: 9090
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp  # api-gateway
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp  # customers-service
+          FromPort: 8081
+          ToPort: 8081
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp  # visits-service
+          FromPort: 8082
+          ToPort: 8082
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp  # vets-service
+          FromPort: 8083
+          ToPort: 8083
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp  # config-server
+          FromPort: 8888
+          ToPort: 8888
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp  # tracing-server
+          FromPort: 9411
+          ToPort: 9411
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp  # hystrix-dashboard
+          FromPort: 7979
+          ToPort: 7979
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp  # grafana-server
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp  # prometheus-server
+          FromPort: 9091
+          ToPort: 9091
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp   # discovery-server
+          FromPort: 8761
+          ToPort: 8761
+          CidrIp: 0.0.0.0/0
+  PetclinicServerLT:
+    Type: "AWS::EC2::LaunchTemplate"
+    Properties:
+      LaunchTemplateData:
+        ImageId: ami-08b993f76f42c3e2f  # London Region - Amazon Linux 2 AMI (HVM), SSD Volume Type - (64-bit x86) 
+        InstanceType: t2.medium
+        KeyName: 20201205
+        SecurityGroupIds:
+          - !GetAtt PetclinicDemoSG.GroupId
+        UserData:
+          Fn::Base64: |
+            #! /bin/bash
+            yum update -y
+            hostnamectl set-hostname petclinic-dev-server
+            amazon-linux-extras install docker -y
+            systemctl start docker
+            systemctl enable docker
+            usermod -a -G docker ec2-user
+            curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            chmod +x /usr/local/bin/docker-compose
+            yum install git -y
+            yum install java-11-amazon-corretto -y
+            cd /home/ec2-user
+            git config --global user.email "flovearth@protonmail.com"
+            git config --global user.name "flovearth"
+            git clone https://github.com/flovearth/Project_Pet_Clinic.git
+            cd Project_Pet_Clinic
+            git fetch
+            git checkout dev
+            
+  PetclinicServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref PetclinicServerLT
+        Version: !GetAtt PetclinicServerLT.LatestVersionNumber
+      Tags:                
+        - Key: Name
+          Value: !Sub Petclinic App Dev Server of ${AWS::StackName}
+Outputs:
+  PetclinicServerDNSName:
+    Description: Petclinic App URL
+    Value: !Sub 
+    - http://${PublicAddress}
+    - PublicAddress: !GetAtt PetclinicServer.PublicDnsName
+
