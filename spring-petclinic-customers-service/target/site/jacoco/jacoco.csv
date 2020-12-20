@@ -1,0 +1,10 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+spring-petclinic-customers-service,org.springframework.samples.petclinic.customers,CustomersServiceApplication,5,3,0,0,2,1,1,1,1,1
+spring-petclinic-customers-service,org.springframework.samples.petclinic.customers.model,PetType,0,13,0,0,0,5,0,4,0,4
+spring-petclinic-customers-service,org.springframework.samples.petclinic.customers.model,Pet,33,38,0,0,8,16,1,11,1,11
+spring-petclinic-customers-service,org.springframework.samples.petclinic.customers.model,Owner,71,37,1,1,21,13,10,7,9,7
+spring-petclinic-customers-service,org.springframework.samples.petclinic.customers.web,PetRequest,161,0,26,0,5,0,26,0,13,0
+spring-petclinic-customers-service,org.springframework.samples.petclinic.customers.web,PetDetails,208,45,40,0,1,12,29,6,9,6
+spring-petclinic-customers-service,org.springframework.samples.petclinic.customers.web,OwnerResource,74,0,0,0,15,0,7,0,7,0
+spring-petclinic-customers-service,org.springframework.samples.petclinic.customers.web,ResourceNotFoundException,4,0,0,0,2,0,1,0,1,0
+spring-petclinic-customers-service,org.springframework.samples.petclinic.customers.web,PetResource,82,33,1,1,17,6,6,4,5,4
