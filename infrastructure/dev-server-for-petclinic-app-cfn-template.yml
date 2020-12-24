@@ -74,7 +74,7 @@ Resources:
       LaunchTemplateData:
         ImageId: ami-08b993f76f42c3e2f  # London Region - Amazon Linux 2 AMI (HVM), SSD Volume Type - (64-bit x86) 
         InstanceType: t2.medium
-        KeyName: 20201205
+        KeyName: !Ref KeyPairName
         SecurityGroupIds:
           - !GetAtt PetclinicDemoSG.GroupId
         UserData:
@@ -93,6 +93,7 @@ Resources:
             cd /home/ec2-user
             git config --global user.email "flovearth@protonmail.com"
             git config --global user.name "flovearth"
+            git config --global credential.helper store
             git clone https://github.com/flovearth/Project_Pet_Clinic.git
             cd Project_Pet_Clinic
             git fetch
@@ -113,4 +114,3 @@ Outputs:
     Value: !Sub 
     - http://${PublicAddress}
     - PublicAddress: !GetAtt PetclinicServer.PublicDnsName
-
