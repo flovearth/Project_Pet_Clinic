@@ -4,7 +4,7 @@ pipeline {
         PATH=sh(script:"echo $PATH:/usr/local/bin", returnStdout:true).trim()
         APP_NAME="petclinic"
         APP_STACK_NAME="feyz-${APP_NAME}-app-${BUILD_NUMBER}"
-        APP_REPO_NAME="flovearth-repo/${APP_NAME}-app-dev"
+        APP_REPO_NAME="flovearth-repo/${APP_NAME}-app-dev-${BUILD_NUMBER}"
         AWS_ACCOUNT_ID=sh(script:'export PATH="$PATH:/usr/local/bin" && aws sts get-caller-identity --query Account --output text', returnStdout:true).trim()
         AWS_REGION="eu-west-2"
         ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
