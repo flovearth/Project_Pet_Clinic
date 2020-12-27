@@ -120,4 +120,4 @@ Outputs:
     Description: Jenkins Server URL
     Value: !Sub 
       - http://${PublicAddress}:8080
-      - PublicAddress: !GetAtt JenkinsServer.PublicIpAddress
+      - PublicAddress: !GetAtt JenkinsServer.PublicDnsName
