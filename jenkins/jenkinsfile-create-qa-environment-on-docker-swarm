@@ -5,7 +5,7 @@ pipeline {
         APP_NAME="petclinic"
         APP_STACK_NAME="feyz-$APP_NAME-App-QA-${BUILD_NUMBER}"
         AWS_REGION="eu-west-2"
-        CFN_KEYPAIR="feyz-${APP_NAME}-qa.key"
+        CFN_KEYPAIR="feyz-${APP_NAME}-qa.key-2"
         CFN_TEMPLATE="./infrastructure/qa-docker-swarm-infrastructure-cfn-template.yml"
         ANSIBLE_PRIVATE_KEY_FILE="${JENKINS_HOME}/.ssh/${CFN_KEYPAIR}"
         ANSIBLE_HOST_KEY_CHECKING="False"
