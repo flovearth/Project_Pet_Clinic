@@ -108,7 +108,8 @@ Resources:
           git clone https://github.com/flovearth/Project_Pet_Clinic.git
           cd Project_Pet_Clinic
           git fetch
-          git checkout dev    
+          git checkout dev
+          chown -R $(whoami) .git/ 
           
 Outputs:
   JenkinsDNS:
