@@ -11,15 +11,19 @@ pipeline {
         ANSIBLE_HOST_KEY_CHECKING="False"
     }
     stages {
-        stage('Create QA Environment Infrastructure') {
+        stage('Create Key Pair') {
             steps {
-                echo 'Creating Infrastructure for QA Environment with Cloudfomation'
-                sh "aws cloudformation create-stack --region ${AWS_REGION} --stack-name ${APP_STACK_NAME} --capabilities CAPABILITY_IAM --template-body file://${CFN_TEMPLATE} --parameters ParameterKey=KeyPairName,ParameterValue=${CFN_KEYPAIR}"
+                echo 'Crating key pair'
                 sh "aws ec2 create-key-pair --region ${AWS_REGION} --key-name ${CFN_KEYPAIR} --query "KeyMaterial" --output text > ${CFN_KEYPAIR}"
                 sh "chmod 400 ${CFN_KEYPAIR}"
                 sh "mkdir -p ${JENKINS_HOME}/.ssh"
                 sh "mv ${CFN_KEYPAIR} ${JENKINS_HOME}/.ssh/${CFN_KEYPAIR}"
-
+            }
+        }
+        stage('Create QA Environment Infrastructure') {
+            steps {
+                echo 'Creating Infrastructure for QA Environment with Cloudfomation'
+                sh "aws cloudformation create-stack --region ${AWS_REGION} --stack-name ${APP_STACK_NAME} --capabilities CAPABILITY_IAM --template-body file://${CFN_TEMPLATE} --parameters ParameterKey=KeyPairName,ParameterValue=${CFN_KEYPAIR}"
 
                 script {
                     while(true) {
