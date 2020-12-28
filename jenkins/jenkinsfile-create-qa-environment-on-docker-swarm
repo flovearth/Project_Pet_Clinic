@@ -11,7 +11,19 @@ pipeline {
         ANSIBLE_HOST_KEY_CHECKING="False"
     }
     stages {
-        
+        stage("Create Key Pair") {
+            
+            steps {
+                echo "Crating key pair"
+                sh "aws ec2 create-key-pair --region ${AWS_REGION} --key-name ${CFN_KEYPAIR} --query "KeyMaterial" --output text > ${CFN_KEYPAIR}"
+                echo "Crating key pair"
+                sh "chmod 400 ${CFN_KEYPAIR}"
+                echo "Crating key pair"
+                sh "mkdir -p ${JENKINS_HOME}/.ssh"
+                echo "Crating key pair"
+                sh "mv ${CFN_KEYPAIR} ${JENKINS_HOME}/.ssh/${CFN_KEYPAIR}"
+            }
+        }
         stage('Create QA Environment Infrastructure') {
             steps {
                 echo 'Creating Infrastructure for QA Environment with Cloudfomation'
@@ -42,19 +54,6 @@ pipeline {
                         }
                     }
                 }
-            }
-        }
-
-        stage("Create Key Pair") {
-            
-            steps {
-                echo "Crating key pair"
-                echo "Crating key pair"
-                sh "chmod 400 ${CFN_KEYPAIR}"
-                echo "Crating key pair"
-                sh "mkdir -p ${JENKINS_HOME}/.ssh"
-                echo "Crating key pair"
-                sh "mv ${CFN_KEYPAIR} ${JENKINS_HOME}/.ssh/${CFN_KEYPAIR}"
             }
         }
 
